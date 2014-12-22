@@ -1,20 +1,23 @@
 package info.justdaile.tdge.core;
 
-import info.justdaile.tdge.tools.FrameIntervalCalculator;
+import info.justdaile.tdge.tools.IntervalCounter;
 
 import java.awt.Container;
 
-public abstract class Engine extends FrameIntervalCalculator implements Runnable{
+public abstract class Engine implements Runnable{
 
 	protected final GameApplication game;
 	protected Thread loop;
 	protected boolean running;
 	protected boolean disableRest;
 	protected boolean syncRender;
-	protected int syncUpdates;
+	protected float syncUpdates;
 	
-	public Engine(GameApplication game, int sync){
-		super(sync);
+	private IntervalCounter loopCounter;
+	private IntervalCounter renderCounter;
+	private IntervalCounter updateCounter;
+	
+	public Engine(GameApplication game){
 		this.game = game;
 		this.game.init(this);
 		this.running = false;
@@ -51,26 +54,43 @@ public abstract class Engine extends FrameIntervalCalculator implements Runnable
 		this.running = true;
 		long accTime = 0;
 		boolean freshUpdate = false;
+		this.loopCounter = new IntervalCounter();
+		this.renderCounter = new IntervalCounter();
+		this.updateCounter = new IntervalCounter();
 		while(running){
-			accTime += this.getLastFrameTime();
-			while(accTime >= getSingleFrameTime()){
+			accTime += this.loopCounter.getTimePassed();
+			this.loopCounter.setMarker();
+			while(accTime >= IntervalCounter.SECOND_IN_NANO / this.syncUpdates){
 				this.game.update();
-				accTime -= getSingleFrameTime();
+				this.updateCounter.setMarker();
+				accTime -= IntervalCounter.SECOND_IN_NANO / this.syncUpdates;
 				freshUpdate = true;
 			}
 			if(syncRender && freshUpdate){
 				this.game.render();
-				this.setMarker();
+				this.renderCounter.setMarker();
 				this.rest(1);
 			}else if(!syncRender){
 				this.game.render();
-				this.setMarker();
+				this.renderCounter.setMarker();
 				this.rest(1);
 			}else{
 				this.rest(5);
 			}
 			freshUpdate = false;			
 		}
+	}
+	
+	public IntervalCounter getLoopCounter(){
+		return this.loopCounter;
+	}
+	
+	public IntervalCounter getRenderCounter(){
+		return this.renderCounter;
+	}
+	
+	public IntervalCounter getUpdateCounter(){
+		return this.updateCounter;
 	}
 	
 	public void onlyRenderAfterUpdates(boolean syncRender){

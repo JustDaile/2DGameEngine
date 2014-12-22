@@ -7,8 +7,8 @@ public class BasicGameContainer extends Engine{
 	
 	private JFrame frame;
 	
-	public BasicGameContainer(final GameApplication game, int sync){
-		super(game, sync);
+	public BasicGameContainer(final GameApplication game){
+		super(game);
 	}
 
 	@Override

@@ -18,12 +18,11 @@ public class Game extends PixelGameApplication {
 	private static final int WIDTH = 16 * 10;
 	private static final int HEIGHT = 16 * 8;
 	private static final int SCALE = 4;
-	private static final int FPS = 60;
 
 	public static void main(String[] args) {
-		container = new BasicGameContainer(new Game("Test Application", WIDTH, HEIGHT, SCALE), FPS);
+		container = new BasicGameContainer(new Game("Test Application", WIDTH, HEIGHT, SCALE));
 		container.onlyRenderAfterUpdates(false);
-		container.disableResting(false);
+		container.disableResting(true);
 		container.display();
 		container.start();
 	}
@@ -33,7 +32,6 @@ public class Game extends PixelGameApplication {
 	public Game(String title, int width, int height, int scale) {
 		super(title, width, height, scale);
 		this.showRuntimeInfo = true;
-		this.setFPSUpdateDelay(250);
 		
 		new TextureLibrary() {
 			@Override

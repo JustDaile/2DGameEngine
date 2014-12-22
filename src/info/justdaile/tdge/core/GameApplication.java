@@ -9,20 +9,12 @@ import java.awt.image.BufferedImage;
 public abstract class GameApplication extends Canvas implements Rendered{
 	private static final long serialVersionUID = 1L;
 	
-	// object fields
 	private String title;
 	private BufferStrategy bs;
 	private BufferedImage screen;
 	private RenderListener rl;
-	
-	// timing based fields
 	private Engine engine;
-	private long fpsUpdateTime;
-	private float fps;
-	
-	private int fpsUpdateDelay;
-	
-	// info
+
 	public boolean showRuntimeInfo = false;
 	
 	public GameApplication(String title, int width, int height, int scale){
@@ -30,9 +22,6 @@ public abstract class GameApplication extends Canvas implements Rendered{
 		this.screen = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		this.title = title;
 		this.setName(this.title);
-		this.fpsUpdateDelay = 200;
-		this.fpsUpdateTime = System.currentTimeMillis() + fpsUpdateDelay;
-		this.fps = 0;
 	}
 	
 	public final void init(Engine engine){
@@ -53,12 +42,10 @@ public abstract class GameApplication extends Canvas implements Rendered{
 			this.rl.doRender(prebuffer);
 		}
 		prebuffer.setColor(Color.white);
-		if(this.showRuntimeInfo){ // show engine info on screen
-			if(System.currentTimeMillis() >= this.fpsUpdateTime){
-				this.fps = this.getEngine().calculateFPS();
-				this.fpsUpdateTime = System.currentTimeMillis() + this.fpsUpdateDelay;
-			}
-			prebuffer.drawString("FPS : " + String.format("%.2f", this.fps), 2, drawbuffer.getFont().getSize());
+		if(this.showRuntimeInfo){
+			prebuffer.drawString("UDPS : " + this.getEngine().getUpdateCounter().getLastCount(), 2, drawbuffer.getFont().getSize());
+			prebuffer.drawString("FPS : " + this.getEngine().getRenderCounter().getLastCount(), 2, drawbuffer.getFont().getSize() * 2);
+			prebuffer.drawString("Total Loops : " + this.getEngine().getLoopCounter().getLastCount(), 2, drawbuffer.getFont().getSize() * 3);
 		}
 		drawbuffer.drawImage(this.screen, 0, 0, this.getWidth(), this.getHeight(), null);
 		this.bs.show();
@@ -67,10 +54,6 @@ public abstract class GameApplication extends Canvas implements Rendered{
 	
 	public void addRenderListener(RenderListener rl){
 		this.rl = rl;
-	}
-	
-	public void setFPSUpdateDelay(int millis){
-		this.fpsUpdateDelay = millis;
 	}
 	
 	public String getTitle(){
