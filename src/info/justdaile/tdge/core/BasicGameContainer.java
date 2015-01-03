@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 
 public class BasicGameContainer extends Engine{
 	
-	private JFrame frame;
+	protected JFrame frame;
 	
 	public BasicGameContainer(final GameApplication game){
 		super(game);

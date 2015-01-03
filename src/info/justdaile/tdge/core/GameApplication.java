@@ -13,7 +13,6 @@ public abstract class GameApplication extends Canvas implements Rendered{
 	private BufferStrategy bs;
 	private BufferedImage screen;
 	private RenderListener rl;
-	private Engine engine;
 
 	public boolean showRuntimeInfo = false;
 	
@@ -22,10 +21,6 @@ public abstract class GameApplication extends Canvas implements Rendered{
 		this.screen = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		this.title = title;
 		this.setName(this.title);
-	}
-	
-	public final void init(Engine engine){
-		this.engine = engine;
 	}
 	
 	@Override
@@ -43,9 +38,7 @@ public abstract class GameApplication extends Canvas implements Rendered{
 		}
 		prebuffer.setColor(Color.white);
 		if(this.showRuntimeInfo){
-			prebuffer.drawString("UDPS : " + this.getEngine().getUpdateCounter().getLastCount(), 2, drawbuffer.getFont().getSize());
-			prebuffer.drawString("FPS : " + this.getEngine().getRenderCounter().getLastCount(), 2, drawbuffer.getFont().getSize() * 2);
-			prebuffer.drawString("Total Loops : " + this.getEngine().getLoopCounter().getLastCount(), 2, drawbuffer.getFont().getSize() * 3);
+			// use graphics to draw runtime info here
 		}
 		drawbuffer.drawImage(this.screen, 0, 0, this.getWidth(), this.getHeight(), null);
 		this.bs.show();
@@ -58,10 +51,6 @@ public abstract class GameApplication extends Canvas implements Rendered{
 	
 	public String getTitle(){
 		return this.title;
-	}
-	
-	public Engine getEngine(){
-		return this.engine;
 	}
 	
 }

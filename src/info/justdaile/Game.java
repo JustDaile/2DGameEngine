@@ -1,8 +1,7 @@
 package info.justdaile;
 
 import java.util.ArrayList;
-
-import info.justdaile.tdge.core.BasicGameContainer;
+import info.justdaile.tdge.core.FullscreenGameContainer;
 import info.justdaile.tdge.pixelengine.BitmapTexture;
 import info.justdaile.tdge.pixelengine.PixelGameApplication;
 import info.justdaile.tdge.pixelengine.PixelScreen;
@@ -14,14 +13,14 @@ import info.justdaile.tdge.tools.Toolkit;
 public class Game extends PixelGameApplication {
 	private static final long serialVersionUID = 1L;
 
-	private static BasicGameContainer container;
+	private static FullscreenGameContainer container;
 	private static final int WIDTH = 16 * 10;
 	private static final int HEIGHT = 16 * 8;
-	private static final int SCALE = 4;
+	private static final int SCALE = 5;
 
 	public static void main(String[] args) {
-		container = new BasicGameContainer(new Game("Test Application", WIDTH, HEIGHT, SCALE));
-		container.onlyRenderAfterUpdates(false);
+		container = new FullscreenGameContainer(new Game("Test Application", WIDTH, HEIGHT, SCALE));
+		container.onlyRenderAfterUpdates(true);
 		container.disableResting(true);
 		container.display();
 		container.start();

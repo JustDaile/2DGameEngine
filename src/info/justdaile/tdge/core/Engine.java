@@ -1,7 +1,5 @@
 package info.justdaile.tdge.core;
 
-import info.justdaile.tdge.tools.IntervalCounter;
-
 import java.awt.Container;
 
 public abstract class Engine implements Runnable{
@@ -13,13 +11,8 @@ public abstract class Engine implements Runnable{
 	protected boolean syncRender;
 	protected float syncUpdates;
 	
-	private IntervalCounter loopCounter;
-	private IntervalCounter renderCounter;
-	private IntervalCounter updateCounter;
-	
 	public Engine(GameApplication game){
 		this.game = game;
-		this.game.init(this);
 		this.running = false;
 		this.disableRest = false;
 		this.running = false;
@@ -52,45 +45,28 @@ public abstract class Engine implements Runnable{
 	@Override
 	public void run(){
 		this.running = true;
+		long lastTime = System.nanoTime();
 		long accTime = 0;
 		boolean freshUpdate = false;
-		this.loopCounter = new IntervalCounter();
-		this.renderCounter = new IntervalCounter();
-		this.updateCounter = new IntervalCounter();
 		while(running){
-			accTime += this.loopCounter.getTimePassed();
-			this.loopCounter.setMarker();
-			while(accTime >= IntervalCounter.SECOND_IN_NANO / this.syncUpdates){
+			accTime += System.nanoTime() - lastTime;
+			lastTime = System.nanoTime();
+			while(accTime >= 1000000000 / this.syncUpdates){
 				this.game.update();
-				this.updateCounter.setMarker();
-				accTime -= IntervalCounter.SECOND_IN_NANO / this.syncUpdates;
+				accTime -= 1000000000 / this.syncUpdates;
 				freshUpdate = true;
 			}
 			if(syncRender && freshUpdate){
 				this.game.render();
-				this.renderCounter.setMarker();
 				this.rest(1);
 			}else if(!syncRender){
 				this.game.render();
-				this.renderCounter.setMarker();
 				this.rest(1);
 			}else{
 				this.rest(5);
 			}
 			freshUpdate = false;			
 		}
-	}
-	
-	public IntervalCounter getLoopCounter(){
-		return this.loopCounter;
-	}
-	
-	public IntervalCounter getRenderCounter(){
-		return this.renderCounter;
-	}
-	
-	public IntervalCounter getUpdateCounter(){
-		return this.updateCounter;
 	}
 	
 	public void onlyRenderAfterUpdates(boolean syncRender){
