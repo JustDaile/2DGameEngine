@@ -1,24 +1,26 @@
-package info.justdaile.tdge.core;
+package info.justdaile.tdge;
+
+import info.justdaile.tdge.core.GameApplication;
 
 import java.awt.Container;
 
 public abstract class Engine implements Runnable{
 
 	protected final GameApplication game;
-	protected Thread loop;
-	protected boolean running;
-	protected boolean disableRest;
-	protected boolean syncRender;
-	protected float syncUpdates;
+	private Thread loop;
+	private boolean running;
+	private boolean disableRest;
+	private boolean syncRender;
+	private float targetFPS;
 	
-	public Engine(GameApplication game){
+	public Engine(GameApplication game, int targetFPS){
 		this.game = game;
 		this.running = false;
 		this.disableRest = false;
 		this.running = false;
 		this.disableRest = false;
 		this.syncRender = false;
-		this.syncUpdates = 60;
+		this.targetFPS = targetFPS;
 	}
 	
 	public abstract void display();
@@ -51,9 +53,9 @@ public abstract class Engine implements Runnable{
 		while(running){
 			accTime += System.nanoTime() - lastTime;
 			lastTime = System.nanoTime();
-			while(accTime >= 1000000000 / this.syncUpdates){
+			while(accTime >= 1000000000 / this.targetFPS){
 				this.game.update();
-				accTime -= 1000000000 / this.syncUpdates;
+				accTime -= 1000000000 / this.targetFPS;
 				freshUpdate = true;
 			}
 			if(syncRender && freshUpdate){

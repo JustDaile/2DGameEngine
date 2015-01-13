@@ -8,19 +8,13 @@ import javax.imageio.ImageIO;
 
 public class Toolkit {
 
-	public static Loader loader = new Loader();
-	
-	public static class Loader {
-
-		public BufferedImage loadImage(String src) {
-			try{
-				return ImageIO.read(new File(src));
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-			return null;
+	public static BufferedImage loadImage(String src) {
+		try{
+			return ImageIO.read(new File(src));
+		}catch(IOException e){
+			e.printStackTrace();
 		}
-
+		return null;
 	}
 	
 }

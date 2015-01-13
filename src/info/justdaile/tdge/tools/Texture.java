@@ -1,17 +1,16 @@
 package info.justdaile.tdge.tools;
 
-public abstract class Texture {
+import java.awt.image.BufferedImage;
 
-	private String name;
+import info.justdaile.tdge.basic.Bitmap;
+
+public class Texture extends Bitmap{
+
+	public String name;
 	
-	public Texture(String name){
+	public Texture(String name, BufferedImage image) {
+		super(image);
 		this.name = name;
 	}
-	
-	public String getName(){
-		return this.name;
-	}
-	
-	public abstract Object getGraphic();
-	
+
 }
