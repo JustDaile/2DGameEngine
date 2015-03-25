@@ -1,6 +1,4 @@
-package info.justdaile.tdge;
-
-import info.justdaile.tdge.core.GameApplication;
+package info.justdaile.tdge.core;
 
 import java.awt.Container;
 

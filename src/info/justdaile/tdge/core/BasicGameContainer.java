@@ -1,7 +1,5 @@
 package info.justdaile.tdge.core;
 
-import info.justdaile.tdge.Engine;
-
 import java.awt.Container;
 
 import javax.swing.JFrame;
@@ -22,6 +20,9 @@ public class BasicGameContainer extends Engine{
 	public void display(){
 		this.frame = new JFrame(this.game.getTitle());
 		this.frame.add(this.game);
+		
+		this.frame.addKeyListener(this.game.getKeyListeners()[0]);
+		
 		this.frame.pack();
 		this.frame.setResizable(true);
 		this.frame.setMinimumSize(this.frame.getSize());
